@@ -21,10 +21,6 @@ pipeline {
       }
     }
     stage('Docker push to registry'){
-      when {
-        expression {
-          return env.BRANCH_NAME ==~ 'release/.*' || env.BRANCH_NAME ==~'master'
-        }
       }
       steps {
         container('docker') {
