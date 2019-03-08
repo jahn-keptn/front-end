@@ -14,7 +14,6 @@ pipeline {
   }
   stages {
     stage('Docker build') {
-      }
       steps {
         container('docker') {
           sh "docker build -t ${env.TAG_DEV} ."
