@@ -21,7 +21,6 @@ pipeline {
       }
     }
     stage('Docker push to registry'){
-      }
       steps {
         container('docker') {
           sh "docker push ${env.TAG_DEV}"
