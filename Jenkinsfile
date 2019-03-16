@@ -1,7 +1,9 @@
 @Library('dynatrace@master') _
 
 pipeline {
-  agent any
+  agent {
+    label 'maven'
+  }  
   environment {
     APP_NAME = "front-end"
     ARTEFACT_ID = "acm-demo-app/" + "${env.APP_NAME}"
