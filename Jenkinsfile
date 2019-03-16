@@ -6,9 +6,8 @@ pipeline {
   }  
   environment {
     APP_NAME = "front-end"
-    ARTEFACT_ID = "acm-demo-app/" + "${env.APP_NAME}"
     VERSION = readFile('version').trim()
-    DOCKER_REPO = "${env.DOCKER_REGISTRY_URL}/${env.APP_NAME}"
+    DOCKER_REPO = "${env.DOCKER_REGISTRY_URL}/acm-demo-app/${env.APP_NAME}"
     DEV_TAG = "${env.VERSION}-${env.BUILD_NUMBER}"
     TAG = "${env.VERSION}"
   }
