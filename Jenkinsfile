@@ -22,6 +22,15 @@ pipeline {
         }
       }
     }
+    stage('Docker push to registry - ecr plugin'){
+      steps {
+        container('docker') {
+          docker.withRegistry('https://370773163666.dkr.ecr.us-east-1.amazonaws.com', 'ecr:us-east-1:aws') {
+            sh "docker push ${env.DOCKER_REPO}:${env.TAG}"
+          }
+        }
+      }
+    }
     stage('Docker push to registry'){
       steps {
         container('docker') {
