@@ -2,7 +2,7 @@
 
 pipeline {
   agent {
-    label 'maven'
+    label 'docker'
   }
   environment {
     APP_NAME = "front-end"
