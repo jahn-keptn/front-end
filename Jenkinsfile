@@ -25,7 +25,7 @@ pipeline {
     stage('Docker push to registry'){
       steps {
         container('docker') {
-          withCredentials([usernamePassword(credentialsId: 'acm-demo-app-cicd-user', passwordVariable: 'TOKEN', usernameVariable: 'USER')]) {
+          withCredentials([usernamePassword(credentialsId: 'registry-creds', passwordVariable: 'TOKEN', usernameVariable: 'USER')]) {
             sh "docker login --username=${USER} --password=${TOKEN} https://${env.DOCKER_REGISTRY_URL}"
             sh "docker push ${env.DOCKER_REPO}:${env.TAG}"
             sh "docker push ${env.DOCKER_REPO}:${env.DEV_TAG}"
