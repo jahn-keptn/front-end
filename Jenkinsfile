@@ -1,9 +1,7 @@
 @Library('dynatrace@master') _
 
 pipeline {
-  agent {
-    label 'docker'
-  }
+
   environment {
     APP_NAME = "front-end"
     ARTEFACT_ID = "acm-demo-app/" + "${env.APP_NAME}"
