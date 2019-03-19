@@ -29,6 +29,7 @@ pipeline {
     stage("deploy") { 
       steps {
         container('kubectl') {
+          echo "checkout manifest and replace metadata"
           checkout scm
           sh "sed -i 's/SERVICE-NAME/${params.service}/g' manifest.yml"
           sh "sed -i 's/NAMESPACE/${params.namespace}/g' manifest.yml"
@@ -37,7 +38,21 @@ pipeline {
           sh "sed -i 's/NODE-PORT/${params.nodeport}/g' manifest.yml"
           sh "sed -i 's/CONTAINER-PORT/${params.containerport}/g' manifest.yml"
           sh "sed -i 's/EXTERNAL-PORT/${params.externalport}/g' manifest.yml"
+
+          echo "kubectl apply"
           sh "kubectl -n ${params.namespace} apply -f manifest.yml"
+
+          echo "get my pod details"
+          sh "kubectl get pods -l app=dt-front-end -n dev -o 'jsonpath={..metadata.name}'"
+
+          echo "execute a couple of CURL commands"
+          sh '''
+            for i in {1..10}
+            do
+              curl http://${params.service}.${params.namespace} || true
+              sleep 10  
+            done
+          '''
         }
       }
     }
