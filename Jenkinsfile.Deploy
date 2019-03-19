@@ -31,7 +31,7 @@ pipeline {
           sh "sed -i 's/SERVICE-NAME/${params.service}/g' manifest.yml"
           sh "sed -i 's/NAMESPACE/${params.namespace}/g' manifest.yml"
           sh "sed -i 's/VERSION/${params.version}/g' manifest.yml"
-          sh "sed -i 's/CONTAINER-IMAGE/${params.image}/g' manifest.yml"
+          sh "sed -i 's#image: .*#image: ${params.image}#'
           sh "sed -i 's/CONTAINER-PORT/${params.containerport}/g' manifest.yml"
           sh "sed -i 's/EXTERNAL-PORT/${params.externalport}/g' manifest.yml"
           sh "kubectl -n ${params.namespace} apply -f manifest.yml"
