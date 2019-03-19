@@ -48,13 +48,15 @@ pipeline {
 
         container('curl') {
           echo "execute a couple of CURL commands"
-          curl http://${service}.${namespace} -f
-          sleep 2
-          curl http://${service}.${namespace} -f
-          sleep 2
-          curl http://${service}.${namespace} -f
+          executeCurl(5, "http://${service}.dev")
         }
       }
     }
   }
+}
+
+def executeCurl(iterations, url) {
+    for (int i = 0; i < iterations; i++) {
+        sh "curl ${url} -f"
+    }
 }
