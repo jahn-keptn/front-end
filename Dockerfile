@@ -12,5 +12,5 @@ RUN apt-get install -y -qq apache2 && \
 COPY index.html /var/www/html/index.html
 COPY 000-default.conf  /etc/apache2/sites-enabled/000-default.conf
 
-EXPOSE 8080
+EXPOSE 80
 CMD apache2ctl -D FOREGROUND

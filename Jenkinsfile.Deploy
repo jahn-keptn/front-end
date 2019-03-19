@@ -1,0 +1,62 @@
+@Library('dynatrace@master') _
+
+pipeline {
+  agent {
+    label 'kubegit'
+  }  
+  parameters {
+        string  (name: 'service',       defaultValue: 'dt-front-end', description: 'name of the service')
+        string  (name: 'version',       defaultValue: 'v1', description: 'logical version of the service')
+        string  (name: 'nodeport',      defaultValue: '31500', description: 'Which port on the node is the service available through?')
+        string  (name: 'externalport',  defaultValue: '80', description: 'Inside the cluster, what port does the service expose?')
+        string  (name: 'containerport', defaultValue: '80', description: 'Which port do pods selected by this service expose?')
+        string  (name: 'image',         defaultValue: 'defaultImage', description: 'name of image that was updated')
+        string  (name: 'namespace',     defaultValue: 'dev', description: 'kubernetes namespace')
+  }
+
+  stages {
+    stage("init") {
+      steps {
+        echo "image: ${params.image}"
+        echo "version: ${params.version}"
+        echo "service: ${params.service}"
+        echo "nodeport: ${params.nodeport}"
+        echo "externalport: ${params.externalport}"
+        echo "containerport: ${params.tarcontainerportgetport}"
+        echo "namespace: ${params.namespace}"
+      }
+    }
+    stage("deploy") { 
+      steps {
+        container('kubectl') {
+          echo "checkout manifest and replace metadata"
+          checkout scm
+          sh "sed -i 's/SERVICE-NAME/${params.service}/g' manifest.yml"
+          sh "sed -i 's/NAMESPACE/${params.namespace}/g' manifest.yml"
+          sh "sed -i 's/VERSION/${params.version}/g' manifest.yml"
+          sh "sed -i 's#image: .*#image: ${params.image}#' manifest.yml"
+          sh "sed -i 's/NODE-PORT/${params.nodeport}/g' manifest.yml"
+          sh "sed -i 's/CONTAINER-PORT/${params.containerport}/g' manifest.yml"
+          sh "sed -i 's/EXTERNAL-PORT/${params.externalport}/g' manifest.yml"
+
+          echo "kubectl apply"
+          sh "kubectl -n ${params.namespace} apply -f manifest.yml"
+
+          echo "get my pod details"
+          sh "kubectl get pods -l app=dt-front-end -n dev -o 'jsonpath={..metadata.name}'"
+        }
+
+        container('curl') {
+          echo "execute a couple of CURL commands"
+          executeCurl(5, "http://${service}.dev")
+        }
+      }
+    }
+  }
+}
+
+def executeCurl(iterations, url) {
+    for (int i = 0; i < iterations; i++) {
+        sh "curl ${url} -f"
+    }
+}
