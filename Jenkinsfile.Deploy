@@ -48,13 +48,11 @@ pipeline {
 
         container('curl') {
           echo "execute a couple of CURL commands"
-          sh """
-            for i in {1..10}
-            do
-              curl http://${service}.${namespace} -f
-              sleep 10
-            done
-          """
+          curl http://${service}.${namespace} -f
+          sleep 2
+          curl http://${service}.${namespace} -f
+          sleep 2
+          curl http://${service}.${namespace} -f
         }
       }
     }
