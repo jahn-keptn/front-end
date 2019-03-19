@@ -5,7 +5,7 @@ pipeline {
     label 'kubegit'
   }  
   parameters {
-        string  (name: 'service',       defaultValue: 'front-end', description: 'name of the service')
+        string  (name: 'service',       defaultValue: 'dt-front-end', description: 'name of the service')
         string  (name: 'version',       defaultValue: 'v1', description: 'logical version of the service')
         string  (name: 'externalport',  defaultValue: '80', description: 'port to expose to the outside world')
         string  (name: 'containerport', defaultValue: '8080', description: 'port exposed by the service')
