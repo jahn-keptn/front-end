@@ -7,8 +7,9 @@ pipeline {
   parameters {
         string  (name: 'service',       defaultValue: 'dt-front-end', description: 'name of the service')
         string  (name: 'version',       defaultValue: 'v1', description: 'logical version of the service')
-        string  (name: 'externalport',  defaultValue: '80', description: 'port to expose to the outside world')
-        string  (name: 'containerport', defaultValue: '8080', description: 'port exposed by the service')
+        string  (name: 'nodeport',      defaultValue: '31500', description: 'Which port on the node is the service available through?')
+        string  (name: 'externalport',  defaultValue: '80', description: 'Inside the cluster, what port does the service expose?')
+        string  (name: 'containerport', defaultValue: '8080', description: 'Which port do pods selected by this service expose?')
         string  (name: 'image',         defaultValue: 'defaultImage', description: 'name of image that was updated')
         string  (name: 'namespace',     defaultValue: 'dev', description: 'kubernetes namespace')
   }
@@ -19,6 +20,7 @@ pipeline {
         echo "image: ${params.image}"
         echo "version: ${params.version}"
         echo "service: ${params.service}"
+        echo "nodeport: ${params.nodeport}"
         echo "externalport: ${params.externalport}"
         echo "containerport: ${params.tarcontainerportgetport}"
         echo "namespace: ${params.namespace}"
@@ -32,6 +34,7 @@ pipeline {
           sh "sed -i 's/NAMESPACE/${params.namespace}/g' manifest.yml"
           sh "sed -i 's/VERSION/${params.version}/g' manifest.yml"
           sh "sed -i 's#image: .*#image: ${params.image}#' manifest.yml"
+          sh "sed -i 's/NODE-PORT/${params.nodeport}/g' manifest.yml"
           sh "sed -i 's/CONTAINER-PORT/${params.containerport}/g' manifest.yml"
           sh "sed -i 's/EXTERNAL-PORT/${params.externalport}/g' manifest.yml"
           sh "kubectl -n ${params.namespace} apply -f manifest.yml"

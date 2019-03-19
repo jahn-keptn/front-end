@@ -55,7 +55,9 @@ spec:
   ports:
   - name: http
     port: EXTERNAL-PORT
+    nodePort: NODE-PORT
     targetPort: CONTAINER-PORT
   selector:
     app: SERVICE-NAME
-  type: LoadBalancer
+  type: 
+#  type: LoadBalancer
