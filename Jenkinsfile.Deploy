@@ -9,7 +9,7 @@ pipeline {
         string  (name: 'version',       defaultValue: 'v1', description: 'logical version of the service')
         string  (name: 'nodeport',      defaultValue: '31500', description: 'Which port on the node is the service available through?')
         string  (name: 'externalport',  defaultValue: '80', description: 'Inside the cluster, what port does the service expose?')
-        string  (name: 'containerport', defaultValue: '8080', description: 'Which port do pods selected by this service expose?')
+        string  (name: 'containerport', defaultValue: '80', description: 'Which port do pods selected by this service expose?')
         string  (name: 'image',         defaultValue: 'defaultImage', description: 'name of image that was updated')
         string  (name: 'namespace',     defaultValue: 'dev', description: 'kubernetes namespace')
   }
