@@ -24,7 +24,7 @@ pipeline {
         echo "namespace: ${params.namespace}"
       }
     }
-    stage("deploy") {
+    stage("deploy") { 
       steps {
         container('kubectl') {
           checkout scm
