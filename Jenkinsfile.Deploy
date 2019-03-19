@@ -1,0 +1,42 @@
+@Library('dynatrace@master') _
+
+pipeline {
+  agent {
+    label 'kubegit'
+  }  
+  parameters {
+        string  (name: 'service',       defaultValue: 'front-end', description: 'name of the service')
+        string  (name: 'version',       defaultValue: 'v1', description: 'logical version of the service')
+        string  (name: 'externalport',  defaultValue: '80', description: 'port to expose to the outside world')
+        string  (name: 'containerport', defaultValue: '8080', description: 'port exposed by the service')
+        string  (name: 'image',         defaultValue: 'defaultImage', description: 'name of image that was updated')
+        string  (name: 'namespace',     defaultValue: 'dev', description: 'kubernetes namespace')
+  }
+
+  stages {
+    stage("init") {
+      steps {
+        echo "image: ${params.image}"
+        echo "version: ${params.version}"
+        echo "service: ${params.service}"
+        echo "externalport: ${params.externalport}"
+        echo "containerport: ${params.tarcontainerportgetport}"
+        echo "namespace: ${params.namespace}"
+      }
+    }
+    stage("deploy") {
+      steps {
+        container('kubectl') {
+          checkout scm
+          sh "sed -i 's/SERVICE-NAME/${params.service}/g' manifest.yml"
+          sh "sed -i 's/NAMESPACE/${params.service}/g' manifest.yml"
+          sh "sed -i 's/VERSION/${params.service}/g' manifest.yml"
+          sh "sed -i 's/CONTAINER-IMAGE/${params.service}/g' manifest.yml"
+          sh "sed -i 's/CONTAINER-PORT/${params.service}/g' manifest.yml"
+          sh "sed -i 's/EXTERNAL-PORT/${params.service}/g' manifest.yml"
+          sh "kubectl -n ${params.namespace} apply -f manifest.yml"
+        }
+      }
+    }
+  }
+}
