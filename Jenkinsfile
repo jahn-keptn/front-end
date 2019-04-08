@@ -5,26 +5,24 @@ pipeline {
     label 'maven'
   }  
   environment {
-    APP_NAME = "front-end"
+    SERVICE_NAME = "front-end"
     VERSION = readFile('version').trim()
-    DOCKER_REPO = "${env.DOCKER_REGISTRY_URL}/${env.APP_NAME}"
-    TAG = "${env.VERSION}"
+    ARTEFACT_ID = "sockshop/" + "${env.SERVICE_NAME}"
+    TAG = "${env.DOCKER_REGISTRY_URL}:5000/${env.ARTEFACT_ID}"
+    TAG_DEV = "${env.TAG}:${env.VERSION}-${env.BUILD_NUMBER}"
   }
   stages {
     stage('Docker build') {
       steps {
         container('docker') {
-          sh "docker build -t ${env.DOCKER_REPO} ."
-          sh "docker tag ${env.DOCKER_REPO} ${env.DOCKER_REPO}:${env.TAG}"
+          sh "docker build -t ${env.TAG_DEV} ."
         }
       }
     }
     stage('Docker push to registry'){
       steps {
         container('docker') {
-          withDockerRegistry([ credentialsId: "registry-creds", url: "" ]) {
-            sh "docker push ${env.DOCKER_REPO}:${env.TAG}"
-          }
+          sh "docker push ${env.TAG_DEV}"
         }
       }
     }
