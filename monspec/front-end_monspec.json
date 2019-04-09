@@ -1,0 +1,23 @@
+{
+    "carts" : {
+        "etype" : "SERVICE",
+        "name" : "Front End",
+        "owner" : "TBD",
+        "environments" : {
+            "Staging" : {
+                "tags" : [
+                    {
+                        "context" : "CONTEXTLESS",
+                        "key" : "environment",
+                        "value" : "staging"
+                    },
+                    {
+                        "context" : "CONTEXTLESS",
+                        "key" : "service",
+                        "value" : "front-end"
+                    }
+                ]
+            }
+        }
+    }
+}
